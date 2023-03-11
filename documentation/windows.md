@@ -1,6 +1,6 @@
-# Windows PowerShell Configuration
+# Windows Setup
 
-This is a Windows PowerShell configuration script that installs a variety of programs and tools for development, communication, security, and entertainment purposes.
+@todo
 
 ## Requirements
 
@@ -11,13 +11,19 @@ This is a Windows PowerShell configuration script that installs a variety of pro
 ## Installation
 
 1. Open Windows PowerShell as an administrator.
-2. Clone or download this repository to your computer.
-3. Navigate to the directory containing the `install.ps1` file.
-4. Run the `install.ps1` script.
+2. Download this repository to your computer.
+3. Navigate to the directory containing the `windows.ps1` file.
+4. Run the `windows.ps1` script.
+
+```
+$ cd ~/Downloads/My-CFG/My-CFG-main/ && windows.ps1
+```
 
 **Disclaimer:** The author of this script is not responsible for any damage or loss of data that may occur as a result of running this script. Use at your own risk.
 
 ## Programs Installed
+
+These are the programs I have set up in my environment. Feel free to edit the scripts to customize them to your needs.
 
 ### Tools
 
@@ -30,20 +36,18 @@ This is a Windows PowerShell configuration script that installs a variety of pro
 - Thunderbird
 
 ### Communication Tools
-
 - Slack
 - Discord
 - WhatsApp
 - Mattermost Desktop
 
 ### Development Tools
-
 - Docker Desktop
-- Microsoft Visual Studio Code
-- JetBrains PyCharm
-- JetBrains IntelliJ IDEA
-- JetBrains GoLand
-- JetBrains Android Studio
+- VS Code
+- PyCharm
+- IntelliJ IDEA
+- GoLand
+- Android Studio
 - Python
 - Nmap
 - Wireshark
@@ -52,11 +56,11 @@ This is a Windows PowerShell configuration script that installs a variety of pro
 - Postman
 
 ### Entertainment
-
 - Steam
 
+### Programs Uninstalled
 
-antes de rodar o ps1, deve configurar o Set-ExecutionPolicy Bypass
-precisa restartar o powershell
-habilitar dark theme
-diretorio de instalacao no D:
+- Disney+
+- Office
+- One Drive
+- Spotify
