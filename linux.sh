@@ -1,20 +1,22 @@
 #!/bin/bash
 
+# firstly made for UBUNTU 20.04
+
 ##### Install some software
 
 # Update package list and upgrade installed packages
-sudo add-apt-repository ppa:openvpn-apt-beta/openvpn-beta
-sudo apt-get update -y
+cd ~
+sudo apt-get update -qq
 sudo apt-get upgrade -
 
 
 # Install general tools
-sudo apt-get -y install curl wget ca-certificates gnupg lsb-release
+sudo apt-get -yy install curl wget ca-certificates gnupg lsb-release
 
-sudo apt-get -y install libreoffice thunderbird firefox
+sudo apt-get -yy install libreoffice thunderbird firefox
 
 # Install development tools
-sudo apt-get -y install git python3 python3-pip golang-go virtualbox
+sudo apt-get -yy install git python3 python3-pip golang-go virtualbox
 
 # Check if goland is already installed before installing it
 if ! command -v goland &> /dev/null
@@ -34,13 +36,15 @@ fi
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-sudo apt-get update
+sudo apt-get update -qq
 
 # Install Docker CE, CLI, and containerd
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+sudo apt-get install -yy docker-ce docker-ce-cli containerd.io
 
 # Install security tools
-sudo apt-get -y install nmap wireshark exiftool openvpn3
+sudo add-apt-repository ppa:openvpn-apt-beta/openvpn-beta
+sudo apt-get update -qq
+sudo apt-get -yy install nmap wireshark exiftool openvpn3
 
 ## Install communication tools
 
@@ -74,8 +78,15 @@ echo "Wallpaper image changed successfully."
 # Set theme to dark
 gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
 
+# Install Microsoft fonts
+sudo apt-get install -yy ttf-mscorefonts-installer
+sudo /usr/lib/msttcorefonts/update-ms-fonts.sh
+
 # Set up the terminal style
 PS1='\[\e[38;2;25;116;210m\]\u\[\e[m\]@\[\e[38;2;179;179;179m\]\h\[\e[m\]:\[\e[0;36m\]\w\[\e[m\] \[\e[0;32m\]\$ \[\e[m\]'
 
 # Set up the tools bar with some of these apps
 gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'discord_discord.desktop', 'slack_slack.desktop', 'mattermost-desktop_mattermost-desktop.desktop', 'firefox.desktop', 'code_code.desktop', 'pycharm-professional_pycharm-professional.desktop', 'goland_goland.desktop', 'org.gnome.Terminal.desktop']"
+
+##### Setting system teaks
+echo "vm.swappiness = 10" | sudo tee -a /etc/sysctl.conf
