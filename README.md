@@ -8,3 +8,7 @@ To set up your environment, follow the instructions in the appropriate document:
 - [Windows](https://github.com/raissonsouto/My-CFG/blob/main/documentation/windows.md)
 - [Linux](https://github.com/raissonsouto/My-CFG/blob/main/documentation/linux.md)
 - [WSL](https://github.com/raissonsouto/My-CFG/blob/main/documentation/wsl.md)
+
+
+## Acknowledge
+- [hagezi/dns-blocklists](https://github.com/hagezi/dns-blocklists)

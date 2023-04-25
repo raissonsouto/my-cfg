@@ -5,30 +5,39 @@
 ##### Install some software
 
 # Update package list and upgrade installed packages
+echo "~ Starting script~"
+echo ""
+echo "[*] Initial update ..."
+
 cd ~
 sudo apt-get update -qq
-sudo apt-get upgrade -
+sudo apt-get upgrade &> /dev/null
 
+echo "[*] Initial update done!"
 
 # Install general tools
-sudo apt-get -yy install curl wget ca-certificates gnupg lsb-release
+echo "[*] Installing packages and programs ..."
 
-sudo apt-get -yy install libreoffice thunderbird firefox
+sudo apt-get -yy install curl wget ca-certificates gnupg lsb-release &> /dev/null
+sudo apt-get -yy install libreoffice thunderbird firefox &> /dev/null
 
 # Install development tools
-sudo apt-get -yy install git python3 python3-pip golang-go virtualbox
+
+sudo apt-get -yy install git python3 python3-pip golang-go virtualbox &> /dev/null
 
 # Check if goland is already installed before installing it
 if ! command -v goland &> /dev/null
 then
-    sudo snap install goland --classic
+    sudo snap install goland --classic &> /dev/null
 fi
 
 # Check if pycharm-professional is already installed before installing it
 if ! command -v pycharm-professional &> /dev/null
 then
-    sudo snap install pycharm-professional --classic
+    sudo snap install pycharm-professional --classic &> /dev/null
 fi
+
+echo "[*] Installation done!"
 
 ## Install docker
 
