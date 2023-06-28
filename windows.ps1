@@ -1,15 +1,54 @@
+# Raisson Souto, 2023
+
+# The goal of this script is to automate the
+# configuration of my Windows environment
+
 # Remove apps
-# Uninstall Disney+
-Get-AppxPackage -Name Disney.DisneyPlus -AllUsers | Remove-AppxPackage
+$programs = @(
+    "Disney.DisneyPlus",
+    "Microsoft.BingWeather",
+    "Microsoft.MicrosoftOfficeHub",
+    "Microsoft.MicrosoftStickyNotes",
+    "Microsoft.OneDrive",
+    "Microsoft.OneNote",
+    "Microsoft.People",
+    "Microsoft.SkypeApp",
+    "Microsoft.Wallet",
+    "Microsoft.WindowsFeedbackHub",
+    "Microsoft.Xbox.TCUI",
+    "Microsoft.XboxApp",
+    "Microsoft.XboxGameCallableUI",
+    "Microsoft.XboxGameOverlay",
+    "Microsoft.XboxGamingOverlay",
+    "Microsoft.XboxIdentityProvider",
+    "Microsoft.XboxSpeechToTextOverlay",
+    "SpotifyAB.SpotifyMusic"
+)
 
-# Uninstall OneDrive
-Get-AppxPackage -Name Microsoft.OneDrive -AllUsers | Remove-AppxPackage
+# Uninstall programs in parallel
+$tasks = foreach ($program in $programs) {
+    Start-Job -ScriptBlock {
+        Get-AppxPackage -Name $args[0] -AllUsers -ErrorAction SilentlyContinue |
+        Remove-AppxPackage -ErrorAction SilentlyContinue
+    } -ArgumentList $program
+}
 
-# Uninstall Office (replace with the version you want to uninstall)
-Get-AppxPackage -Name Microsoft.Office.Desktop -AllUsers | Remove-AppxPackage
+Wait-Job $tasks | Out-Null
 
-# Uninstall Spotify
-Get-AppxPackage -Name SpotifyAB.SpotifyMusic -AllUsers | Remove-AppxPackage
+$results = $tasks | Receive-Job
+
+foreach ($i in 0..($results.Count - 1)) {
+    $program = $programs[$i]
+    $result = $results[$i]
+
+    if ($result) {
+        Write-Host "Uninstalled program: $program"
+    } else {
+        Write-Host "Program not found: $program"
+    }
+}
+
+Remove-Job $tasks | Out-Null
 
 # Set Windows dark theme
 if (!(Test-Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize')) {
@@ -23,24 +62,34 @@ New-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\P
 Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop\' -Name 'Wallpaper' -Value 'C:\Windows\System32\solidblack.bmp'
 RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
 
-# Set lock screen wallpaper
-$ImagePath = "D:\Code\My-CFG\lock-bg.jpeg"
-$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
-if (!(Test-Path -Path $regPath)) {
-    New-Item -Path $regPath -Force | Out-Null
-}
-New-ItemProperty -Path $regPath -Name "LockScreenImagePath" -Value $ImagePath -Force | Out-Null
-
 # Install Nvidia driver
-Start-Process -FilePath "D:\Softwares\installers\driver-nvdia.exe"
+$nvidiaDriver = "D:\Softwares\installers\driver-nvdia.exe"
 
-# Check if WSL is already installed
-if (!(Get-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online -ErrorAction SilentlyContinue)) {
-    # Install WSL 2
-    dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-    dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+if (Test-Path $nvidiaDriver -PathType Leaf) {
+    Start-Process -FilePath $nvidiaDriver
+} else {
+    "File does not exist: $nvidiaDriver"
+}
+
+workflow Install-WSL {
+    param ([string]$Name)
+
+    # Check if WSL is already installed
+    if (!(Get-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online -ErrorAction SilentlyContinue)) {
+    
+        # Install WSL 2
+        dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+        dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+    }
+    else {
+        Write-Host "WSL is already installed."
+    }
+
+    Restart-Computer -Wait
+
     # Set WSL 2 as the default version
     wsl --set-default-version 2
+
     # Download Ubuntu 22.04 LTS from the Microsoft Store
     $app = Get-AppxPackage -Name CanonicalGroupLimited.Ubuntu22.04onWindows
     if ($app -eq $null) {
@@ -49,12 +98,17 @@ if (!(Get-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux 
         Pause
         Exit
     }
+
     # Launch Ubuntu 22.04 LTS and complete the installation
     wsl --set-version Ubuntu-22.04 2
     wsl -d Ubuntu-22.04
-} else {
-    Write-Host "WSL is already installed."
 }
+
+Install-WSL
+
+# Install openvpn
+Invoke-WebRequest -Uri "https://openvpn.net/downloads/openvpn-client-installer.exe" -OutFile "C:\Temp\openvpn-client-installer.exe"
+Start-Process "C:\Temp\openvpn-client-installer.exe"
 
 # Install Chocolatey
 if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
@@ -66,13 +120,17 @@ if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
 # Programs to install
 $programs = @(
     # Tools
-    '7zip', 'vlc', 'qbittorrent', 'chromium', 'firefox', 'obs-studio', 'libreoffice-still', 'notion', 'droidcamclient', 'tor-browser', 'thunderbird', 'steam', 'bitwarden',
+    '7zip', 'vlc', 'qbittorrent', 'calibre', 'chrome', 'firefox', 'obs-studio',
+    'libreoffice-still', 'notion', 'droidcamclient', 'tor-browser', 'thunderbird',
+    
+    # Games
+    'steam',
     
     # Communication tools
     'slack', 'discord', 'whatsapp', 'mattermost-desktop',
     
     # Dev tools
-    'docker-desktop', 'nmap', 'microsoft-windows-terminal', 'wireshark', 'git', 'virtualbox', 'pgadmin4', 'postman',
+    'docker-desktop', 'nmap', 'microsoft-windows-terminal', 'git', 'virtualbox', 'postman',
     
     # Code editors and languages
     'pycharm', 'intellijidea', 'goland', 'androidstudio', 'vscode', 'python'
@@ -87,7 +145,3 @@ $tasks = foreach ($program in $programs) {
 Wait-Job $tasks | Out-Null
 Receive-Job $tasks | Out-Null
 Remove-Job $tasks | Out-Null
-
-# Install openvpn
-Invoke-WebRequest -Uri "https://openvpn.net/downloads/openvpn-client-installer.exe" -OutFile "C:\Temp\openvpn-client-installer.exe"
-Start-Process "C:\Temp\openvpn-client-installer.exe"
