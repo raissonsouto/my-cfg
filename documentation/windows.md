@@ -10,7 +10,7 @@ Here you will find useful information about how to setup your Windows enviroment
 - Windows PowerShell (version 5.1 or later)
 - Administrator privileges
 
-## Installation
+## How to get it done
 
 1. Download this repository to your computer.
 
@@ -40,9 +40,17 @@ windows.ps1
 set-executionpolicy Restricted
 ```
 
+## Settings
+- Dark theme
+- Taskbar small buttons
+- Hide search, cortana and task view buttons
+- Remove pre-installed programs listed bellow
+- Hide news and interests tab
+- Install some software listed bellow
+
 ## Programs Installed
 
-These are the programs I have set up in my environment. Feel free to edit the scripts to customize them to your needs.
+These are the programs I have set up in my environment, feel free to edit the scripts to customize them to your needs.
 
 ### Tools
 
@@ -55,10 +63,11 @@ These are the programs I have set up in my environment. Feel free to edit the sc
 - Notion
 - OBS
 - OpenVPN
+- qBitTorrent
 - Thunderbird
 - Tor Browser
 - VLC
-- qBitTorrent
+- WSL2
 
 ### Communication Tools
 - Discord
@@ -87,16 +96,16 @@ These are the programs I have set up in my environment. Feel free to edit the sc
 
 - Disney+
 - Clima
-- dicas
-- hub de comentarios
-- mapas (@todo)
-- mixed reality portal (@todo)
-- notas autoadesivas
-- solitaire & casual games (@todo)
-- vincular ao celular
-- skype
-- pessoas
-- one note
+- Dicas
+- Hub de comentarios
+- Mapas (@todo)
+- Mixed reality portal (@todo)
+- Notas autoadesivas
+- Solitaire & casual games (@todo)
+- Vincular ao celular
+- Skype
+- Pessoas
+- One note
 - Office
 - One Drive
 - Spotify
