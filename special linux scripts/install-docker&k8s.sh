@@ -16,7 +16,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docke
 apt-get update -y &> /dev/null
 apt-get install -yy docker-ce docker-ce-cli containerd.io &> /dev/null
 
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+cat << EOF | sudo tee /etc/modules-load.d/k8s.conf
 br_netfilter
 EOF
 
@@ -31,7 +31,7 @@ curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 apt-get update -y &> /dev/null
-apt-get install -yy kubeadm kubelet kubectl &> /dev/null
+apt-get install -yy kubeadm kubelet kubectl &> /dev/null #  kubeadm=1.23.4-00 kubelet=1.23.4-00 kubectl=1.23.4-00
 apt-mark hold kubelet kubeadm kubectl &> /dev/null
 
 systemctl enable docker
