@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# firstly made for UBUNTU 20.04
+# Raisson Souto, 2023
+
+# The goal of this script is to automate the
+# configuration of my Ubuntu environment
 
 ##### Install some software
 
