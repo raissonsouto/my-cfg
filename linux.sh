@@ -7,6 +7,9 @@
 
 ##### Install some software
 
+# Log file
+LOG_FILE="linux.log"
+
 # Update package list and upgrade installed packages
 echo "~ Starting script~"
 echo ""
@@ -14,30 +17,30 @@ echo "[*] Initial update ..."
 
 cd ~
 sudo apt-get update -qq
-sudo apt-get upgrade &> /dev/null
+sudo apt-get upgrade &> /dev/null 2>> $LOG_FILE
 
 echo "[*] Initial update done!"
 
 # Install general tools
 echo "[*] Installing packages and programs ..."
 
-sudo apt-get -yy install curl wget ca-certificates gnupg lsb-release &> /dev/null
-sudo apt-get -yy install libreoffice thunderbird firefox &> /dev/null
+sudo apt-get -yy install curl wget ca-certificates gnupg lsb-release &> /dev/null 2>> $LOG_FILE
+sudo apt-get -yy install libreoffice thunderbird firefox &> /dev/null 2>> $LOG_FILE
 
 # Install development tools
 
-sudo apt-get -yy install git python3 python3-pip golang-go virtualbox &> /dev/null
+sudo apt-get -yy install git python3 python3-pip golang-go virtualbox &> /dev/null 2>> $LOG_FILE
 
 # Check if goland is already installed before installing it
-if ! command -v goland &> /dev/null
+if ! command -v goland &> /dev/null 2>> $LOG_FILE
 then
-    sudo snap install goland --classic &> /dev/null
+    sudo snap install goland --classic &> /dev/null 2>> $LOG_FILE
 fi
 
 # Check if pycharm-professional is already installed before installing it
-if ! command -v pycharm-professional &> /dev/null
+if ! command -v pycharm-professional &> /dev/null 2>> $LOG_FILE
 then
-    sudo snap install pycharm-professional --classic &> /dev/null
+    sudo snap install pycharm-professional --classic &> /dev/null 2>> $LOG_FILE
 fi
 
 echo "[*] Installation done!"
@@ -46,7 +49,7 @@ echo "[*] Installation done!"
 
 # Add Docker's official GPG key and Docker repository to APT sources
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 2>> $LOG_FILE
 
 sudo apt-get update -qq
 
@@ -61,13 +64,13 @@ sudo apt-get -yy install nmap wireshark exiftool openvpn3
 ## Install communication tools
 
 # Check if slack is already installed before installing it
-if ! snap list slack &> /dev/null
+if ! snap list slack &> /dev/null 2>> $LOG_FILE
 then
     sudo snap install slack --classic
 fi
 
 # Check if discord is already installed before installing it
-if ! snap list discord &> /dev/null
+if ! snap list discord &> /dev/null 2>> $LOG_FILE
 then
     sudo snap install discord
 fi
