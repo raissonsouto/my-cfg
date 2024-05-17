@@ -1,0 +1,54 @@
+export OVPN_PATH='/etc/openvpn/client/raisson.souto.ovpn'
+
+alias vpn-start='sudo openvpn --config $OVPN_PATH'
+alias vpn-stop='sudo pkill openvpn'
+alias vpn-status='ps aux | grep openvpn'
+
+alias q='clear'
+
+# apt
+alias update='sudo apt update'
+alias install='sudo apt install -y'
+
+# file system
+alias CODE='cd ~/code'
+alias ..='cd ..;ls --color=auto'
+alias ...='cd ../../;ls --color=auto'
+
+alias ls='ls --color=auto'
+alias ll='ls -la --color=auto'
+
+# git
+alias gta.='git add .'
+alias gtc='git commit -m'
+alias gtp='git push'
+alias gts='git status'
+
+# python & pip
+alias py='python3'
+alias pip='pip3'
+alias pyreq='pip install -r requirements.txt'
+alias pyv-crt='python3 -m venv venv'
+alias pyv-stt='source venv/bin/activate'
+
+# tmux
+alias tnew='tmux -2 new -s'
+alias tati='tmux -2 attach -t'
+alias tkll='tmux kill-ses -t'
+
+# k8s
+alias kg='kubectl get'
+alias ka='kubectl apply -f'
+alias kdes='kubectl describe'
+alias kx='kubectl exec'
+alias kdel='kubectl delete'
+alias kl='kubectl logs'
+
+# command search
+if [[ $- == *i* ]]
+then
+  bind '"\e[A": history-search-backward'
+  bind '"\e[B": history-search-forward'
+  bind '"\e[C": forward-char'
+  bind '"\e[D": backward-char'
+fi
