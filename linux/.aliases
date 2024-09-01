@@ -15,34 +15,34 @@ alias CODE='cd ~/code'
 alias ..='cd ..;ls --color=auto'
 alias ...='cd ../../;ls --color=auto'
 
-alias ls='ls --color=auto'
-alias ll='ls -la --color=auto'
+alias ll='ls -lha'
 
 # git
-alias gta.='git add .'
-alias gtc='git commit -m'
-alias gtp='git push'
+alias rebase='git rebase'
+alias gadd='git add'
+alias commit='git commit -m'
+alias gpull='git pull'
+alias gpush='git push'
 alias gts='git status'
 
 # python & pip
 alias py='python3'
 alias pip='pip3'
 alias pyreq='pip install -r requirements.txt'
-alias pyv-crt='python3 -m venv venv'
-alias pyv-stt='source venv/bin/activate'
-
+alias pyvenv='python3 -m venv venv && source venv/bin/activate'
 # tmux
 alias tnew='tmux -2 new -s'
 alias tati='tmux -2 attach -t'
 alias tkll='tmux kill-ses -t'
 
 # k8s
-alias kg='kubectl get'
-alias ka='kubectl apply -f'
-alias kdes='kubectl describe'
-alias kx='kubectl exec'
-alias kdel='kubectl delete'
-alias kl='kubectl logs'
+alias k='kubectl'
+alias kg='k get'
+alias ka='k apply -f'
+alias kdes='k describe'
+alias kx='k exec'
+alias kdel='k delete'
+alias kl='k logs'
 
 # command search
 if [[ $- == *i* ]]
