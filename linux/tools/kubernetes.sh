@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export DEBIAN_FRONTEND="noninteractive"
-sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf # used to disable pending kernel upgrade popup
+sudo sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf # used to disable pending kernel upgrade popup
 
 sudo apt update -qq
 sudo apt upgrade -yy -qq
