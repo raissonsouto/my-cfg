@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 echo_session "Setting up shortcuts"
 
 echo_topic "Applying terminal shortcuts..."
@@ -10,16 +12,14 @@ else
     echo_error "copying .aliases file."
 fi
 
-if echo -e '\nif [ -f "$HOME/.aliases" ]; then\n    source "$HOME/.aliases"\nfi' >> $HOME/.bashrc; then
-    echo "--> .bashrc updated successfully."
+if grep -q 'source "$HOME/.aliases"' "$HOME/.bashrc"; then
+    echo "--> .bashrc already contains aliases source block."
 else
-    echo_error "Error updating .bashrc."
-fi
-
-if source $HOME/.bashrc; then
-    echo "--> .bashrc sourced successfully."
-else
-    echo_error "unable to source .bashrc."
+    if echo -e '\nif [ -f "$HOME/.aliases" ]; then\n    source "$HOME/.aliases"\nfi' >> $HOME/.bashrc; then
+        echo "--> .bashrc updated successfully."
+    else
+        echo_error "Error updating .bashrc."
+    fi
 fi
 
 echo "[*] Terminal shortcuts applied."
@@ -43,13 +43,12 @@ else
 fi
 
 echo_subtopic "Open file explorer: (Windows + E)"
-gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['$keybinding_path/custom0/']" 
+gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['$keybinding_path/custom0/','$keybinding_path/custom1/']"
 gsettings set $keybindings_domain:$keybinding_path/custom0/ name 'Open Nautilus'
 gsettings set $keybindings_domain:$keybinding_path/custom0/ command 'nautilus'
 gsettings set $keybindings_domain:$keybinding_path/custom0/ binding "<Super>e"
 
 echo_subtopic "Open settings: (Windows + S)"
-gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['$keybinding_path/custom1/']"
 gsettings set $keybindings_domain:$keybinding_path/custom1/ name 'Open Settings'
 gsettings set $keybindings_domain:$keybinding_path/custom1/ command 'gnome-control-center'
 gsettings set $keybindings_domain:$keybinding_path/custom1/ binding "<Super>s"

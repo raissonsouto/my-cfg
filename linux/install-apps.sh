@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 echo_session "Installing apps"
 
 function apt_install() {
@@ -15,7 +17,7 @@ function apt_install() {
     done
 }
 
-mkdir -p /etc/apt/keyrings
+sudo mkdir -p /etc/apt/keyrings
 
 APT_PACKAGES=("apt-transport-https" "ca-certificates" "curl" "gpg" "gnupg" "lsb-release" "wget" "unzip")
 apt_install "${APT_PACKAGES[@]}"
@@ -38,7 +40,7 @@ sudo add-apt-repository ppa:obsproject/obs-studio
 
 echo_subtopic "Adding openvpn3 repository"
 
-curl -sSfL https://packages.openvpn.net/packages-repo.gpg >/etc/apt/keyrings/openvpn.asc
+curl -sSfL https://packages.openvpn.net/packages-repo.gpg | sudo tee /etc/apt/keyrings/openvpn.asc > /dev/null
 
 echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] \
     https://packages.openvpn.net/openvpn3/ubuntu $DISTRO main" | sudo \
@@ -68,8 +70,8 @@ rm -f packages.microsoft.gpg
 echo_topic "Apt repositories added"
 
 echo_topic "Starting initial apt update/upgrade..."
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get update -y
+sudo apt-get upgrade -y
 echo_topic "Initial apt update/upgrade done"
 
 echo_topic "Installing packages and apps..."
@@ -84,8 +86,8 @@ APT_APPS=(
     "nmap"
     "obs-studio"
     "openvpn3"
-    "python3.11"
-    "python3.11-venv"
+    "python3"
+    "python3-venv"
     "python3-pip"
     "qbittorrent"
     "slack"

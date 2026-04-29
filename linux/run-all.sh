@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source ./utils.sh
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$SCRIPT_DIR/utils.sh"
 
 DISTRO=$(lsb_release -c | awk '{print $2}')
 
@@ -19,9 +23,9 @@ echo -e "${GREEN}Current working dir:${NC} $(pwd)"
 echo -e "${GREEN}Current Date/Time:${NC} $(date)"
 echo -e "${GREEN}Ubuntu codename:${NC} $DISTRO"
 
-source ./install-apps.sh
-source ./add-shortcuts.sh
-source ./setup-ui.sh
+source "$SCRIPT_DIR/install-apps.sh"
+source "$SCRIPT_DIR/add-shortcuts.sh"
+source "$SCRIPT_DIR/setup-ui.sh"
 
 echo_topic "Veryfing if SSH key pair exists..."
 
