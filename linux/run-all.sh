@@ -27,22 +27,23 @@ source "$SCRIPT_DIR/install-apps.sh"
 source "$SCRIPT_DIR/add-shortcuts.sh"
 source "$SCRIPT_DIR/setup-ui.sh"
 
-echo_topic "Veryfing if SSH key pair exists..."
+echo_topic "Verifying if SSH key pair exists..."
 
 if [ -f "$HOME/.ssh/id_rsa" ]; then
     echo_subtopic "SSH key already exists:"
     echo ""
-    cat $HOME/.ssh/id_rsa.pub
+    cat "$HOME/.ssh/id_rsa.pub"
 else
     echo_subtopic "SSH key not found. Generating a new one..."
-    keygen_log=$(ssh-keygen -t rsa -b 4096 2>&1)
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
 
-    if [ $? -eq 0 ]; then
+    if keygen_log=$(ssh-keygen -t rsa -b 4096 -N "" -f "$HOME/.ssh/id_rsa" 2>&1); then
         echo_subtopic "SSH key successfully generated."
         echo ""
-        cat $HOME/.ssh/id_rsa.pub
+        cat "$HOME/.ssh/id_rsa.pub"
     else
-        echo $keygen_log
+        echo "$keygen_log"
         echo_error "Generating SSH key."
     fi
 fi

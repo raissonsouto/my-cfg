@@ -4,7 +4,8 @@ Welcome to My-CFG! This repository provides automated setup scripts to configure
 
 ## Linux
 
-```
+```bash
+sudo apt update && sudo apt install -y git
 git clone https://github.com/raissonsouto/my-cfg.git && bash my-cfg/linux/run-all.sh
 ```
 
