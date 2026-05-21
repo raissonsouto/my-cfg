@@ -77,6 +77,50 @@ function configure_wireshark_capture() {
     echo_subtopic "Log out and back in for wireshark group access."
 }
 
+function configure_firefox_extensions() {
+    local policies_dir="/etc/firefox/policies"
+    local policies_file="$policies_dir/policies.json"
+    local tmp_file
+
+    echo_topic "Configuring Firefox extensions..."
+
+    tmp_file="$(mktemp)"
+
+    if sudo test -f "$policies_file"; then
+        if ! sudo jq empty "$policies_file" > /dev/null; then
+            rm -f "$tmp_file"
+            echo_error "Existing Firefox policies file is not valid JSON: $policies_file"
+        fi
+
+        sudo jq '
+            .policies = (.policies // {})
+            | .policies.ExtensionSettings = (.policies.ExtensionSettings // {})
+            | .policies.ExtensionSettings["uBlock0@raymondhill.net"] = {
+                "installation_mode": "force_installed",
+                "install_url": "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+            }
+        ' "$policies_file" > "$tmp_file"
+    else
+        jq -n '
+            {
+                "policies": {
+                    "ExtensionSettings": {
+                        "uBlock0@raymondhill.net": {
+                            "installation_mode": "force_installed",
+                            "install_url": "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+                        }
+                    }
+                }
+            }
+        ' > "$tmp_file"
+    fi
+
+    sudo install -D -o root -g root -m 644 "$tmp_file" "$policies_file"
+    rm -f "$tmp_file"
+
+    echo_subtopic "uBlock Origin will be installed by Firefox policy on next Firefox start."
+}
+
 sudo mkdir -p /etc/apt/keyrings
 
 echo_topic "Cleaning stale apt repository files..."
@@ -185,6 +229,7 @@ APT_APPS=(
     "code"
     "dconf-editor"
     "exiftool"
+    "firefox"
     "gnome-shell-extension-manager"
     "gnome-shell-extension-prefs"
     "mattermost-desktop"
@@ -217,3 +262,4 @@ source "$SCRIPT_DIR/tools/slack.sh"
 
 echo_topic "Enabling groups access..."
 configure_wireshark_capture
+configure_firefox_extensions
