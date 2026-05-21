@@ -32,3 +32,17 @@ function echo_error {
     echo -e "${RED}ERROR: $1${NC}"
     exit 1
 }
+
+function confirm {
+    local prompt="$1"
+    local response
+
+    if ! read -r -p "$prompt [y/N] " response; then
+        return 1
+    fi
+
+    case "$response" in
+        [yY] | [yY][eE][sS]) return 0 ;;
+        *) return 1 ;;
+    esac
+}
