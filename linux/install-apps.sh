@@ -121,6 +121,65 @@ function configure_firefox_extensions() {
     echo_subtopic "uBlock Origin will be installed by Firefox policy on next Firefox start."
 }
 
+function configure_vscode() {
+    local settings_dir="$HOME/.config/Code/User"
+    local settings_file="$settings_dir/settings.json"
+    local tmp_file
+    local extension
+    local extensions=(
+        "eamodio.gitlens"
+        "ms-vscode-remote.remote-ssh"
+        "yzhang.markdown-all-in-one"
+        "streetsidesoftware.code-spell-checker"
+        "rust-lang.rust-analyzer"
+    )
+
+    echo_topic "Configuring VS Code..."
+
+    if ! command -v code > /dev/null 2>&1; then
+        echo_subtopic "VS Code CLI not found; skipping VS Code extensions and settings."
+        return
+    fi
+
+    for extension in "${extensions[@]}"; do
+        echo_subtopic "Installing VS Code extension: $extension"
+        code --install-extension "$extension" --force
+    done
+
+    mkdir -p "$settings_dir"
+    tmp_file="$(mktemp)"
+
+    if [ -f "$settings_file" ]; then
+        if ! jq empty "$settings_file" > /dev/null; then
+            rm -f "$tmp_file"
+            echo_error "Existing VS Code settings file is not valid JSON: $settings_file"
+        fi
+
+        jq '
+            .["extensions.ignoreRecommendations"] = true
+            | .["update.showReleaseNotes"] = false
+            | .["workbench.notifications.showInTitleBar"] = false
+            | .["gitlens.showWelcomeOnInstall"] = false
+            | .["gitlens.showWhatsNewAfterUpgrades"] = false
+        ' "$settings_file" > "$tmp_file"
+    else
+        jq -n '
+            {
+                "extensions.ignoreRecommendations": true,
+                "update.showReleaseNotes": false,
+                "workbench.notifications.showInTitleBar": false,
+                "gitlens.showWelcomeOnInstall": false,
+                "gitlens.showWhatsNewAfterUpgrades": false
+            }
+        ' > "$tmp_file"
+    fi
+
+    install -m 644 "$tmp_file" "$settings_file"
+    rm -f "$tmp_file"
+
+    echo_subtopic "VS Code extensions and notification settings configured."
+}
+
 sudo mkdir -p /etc/apt/keyrings
 
 echo_topic "Cleaning stale apt repository files..."
@@ -263,3 +322,4 @@ source "$SCRIPT_DIR/tools/slack.sh"
 echo_topic "Enabling groups access..."
 configure_wireshark_capture
 configure_firefox_extensions
+configure_vscode
