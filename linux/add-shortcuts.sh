@@ -35,6 +35,23 @@ else
     echo_subtopic "Skipping .bash_aliases setup: python3 not found."
 fi
 
+echo_topic "Configuring terminal prompt..."
+if grep -Fq "# my-cfg prompt" "$HOME/.bashrc"; then
+    echo_subtopic "Terminal prompt already configured."
+else
+    {
+        echo ""
+        echo "# my-cfg prompt"
+        echo "if [ -f /usr/share/git/completion/git-prompt.sh ]; then"
+        echo "    . /usr/share/git/completion/git-prompt.sh"
+        echo "fi"
+        echo "export PS1='\\[\\e[1;32m\\][\\A]\\[\\e[0m\\] \\[\\e[1;34m\\]\\u@\\h\\[\\e[0m\\]:\\[\\e[1;33m\\]\\w\\[\\e[0m\\]\\[\\e[1;35m\\]\$(__git_ps1 \" (%s)\")\\[\\e[0m\\] \\$ '"
+    } >> "$HOME/.bashrc"
+    # shellcheck disable=SC1090
+    source "$HOME/.bashrc"
+    echo_subtopic "Terminal prompt configured."
+fi
+
 echo "[*] Terminal shortcuts applied."
 
 echo_topic "Verifying if gsettings is installed..."

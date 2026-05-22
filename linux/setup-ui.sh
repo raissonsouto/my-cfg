@@ -72,6 +72,7 @@ GNOME_EXTENSIONS=(
     "AlphabeticalAppGrid@stuarthayhurst"
     "caffeine@patapon.info"
     "Hide_Activities@shay.shayel.org"
+    "gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com"
 )
 
 GNOME_SHELL_VERSION="$(gnome-shell --version | awk '{print $3}' | cut -d. -f1)"
